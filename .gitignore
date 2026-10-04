@@ -98,10 +98,11 @@ logs/
 traces.jsonl
 
 # Auto-coder skill cache
-.github/skills/auto-coder/.spec_hash
+.agents/skills/auto-coder/.spec_hash
 
 # Secrets
 .env.local
 .env.*.local
 secrets.yaml
 nonexistent_traces.jsonl/
+config/settings.yaml

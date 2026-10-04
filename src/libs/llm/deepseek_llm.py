@@ -50,23 +50,23 @@ class DeepSeekLLM(BaseLLM):
         
         Args:
             settings: Application settings containing LLM configuration.
-            api_key: Optional API key override (falls back to env var DEEPSEEK_API_KEY).
+            api_key: Optional API key override (falls back to DEEPSEEK_API_KEY, then settings.llm.api_key).
             base_url: Optional base URL override.
             **kwargs: Additional configuration overrides.
         
         Raises:
-            ValueError: If API key is not provided and not found in environment.
+            ValueError: If API key is not provided in any supported source.
         """
         self.model = settings.llm.model
         self.default_temperature = settings.llm.temperature
         self.default_max_tokens = settings.llm.max_tokens
         
-        # API key: explicit > env var
-        self.api_key = api_key or os.environ.get("DEEPSEEK_API_KEY")
+        # API key: explicit > env var > project settings
+        self.api_key = api_key or os.environ.get("DEEPSEEK_API_KEY") or getattr(settings.llm, "api_key", None)
         if not self.api_key:
             raise ValueError(
                 "DeepSeek API key not provided. Set DEEPSEEK_API_KEY environment variable "
-                "or pass api_key parameter."
+                "or settings.llm.api_key, or pass api_key parameter."
             )
         
         # Base URL: explicit > default

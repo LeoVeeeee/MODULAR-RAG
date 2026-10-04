@@ -359,6 +359,14 @@ class TestDeepSeekLLM:
         with patch.dict("os.environ", {"DEEPSEEK_API_KEY": "env-key"}):
             llm = DeepSeekLLM(settings)
             assert llm.api_key == "env-key"
+
+    def test_init_with_settings_api_key(self):
+        """Should use the configured API key when no override is set."""
+        settings = MockSettings()
+        settings.llm.api_key = "settings-key"
+        with patch.dict("os.environ", {}, clear=True):
+            llm = DeepSeekLLM(settings)
+        assert llm.api_key == "settings-key"
     
     def test_init_missing_api_key(self):
         """Should raise error when API key is missing."""
